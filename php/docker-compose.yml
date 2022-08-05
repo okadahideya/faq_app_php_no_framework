@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  faq_php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - faq_db
+  faq_db:
+    build:
+      context: ./docker/db
+      dockerfile: Dockerfile
+    volumes:
+      - faq_app_db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: study
+      MYSQL_USER: root_user
+      MYSQL_PASSWORD: root
+      # root userに外部からのアクセス権付与
+      MYSQL_ROOT_HOST: '%'
+      TZ: Asia/Tokyo
+      
+volumes:
+  faq_app_db_data:
